@@ -14,17 +14,24 @@ public class AuthFilter implements Filter {
 
         String uri = req.getRequestURI();
 
-        if (uri.contains("login") || uri.contains("register") || uri.contains("assets")) {
+        // Cho phép truy cập tự do khi chưa có tài khoản
+        if (uri.contains("login") ||
+            uri.contains("register") ||
+            uri.contains("index.jsp") ||
+            uri.endsWith("/") ||
+            uri.contains("assets")) {
+
             chain.doFilter(request, response);
             return;
         }
 
         HttpSession session = req.getSession(false);
 
-        if (session != null && session.getAttribute("user") != null) {
-            chain.doFilter(request, response);
-        } else {
+        if (session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login");
+            return;
         }
+
+        chain.doFilter(request, response);
     }
 }

@@ -11,7 +11,7 @@ public class AssignmentDAO {
 
     public List<Assignment> findBySubject(int subjectId) {
         List<Assignment> list = new ArrayList<>();
-        String sql = "SELECT * FROM assignments WHERE subjectId = ?";
+        String sql = "SELECT * FROM assignments WHERE subjectId = ? ORDER BY dueDate ASC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -22,9 +22,15 @@ public class AssignmentDAO {
             while (rs.next()) {
                 Assignment a = new Assignment();
                 a.setId(rs.getInt("id"));
+                a.setSubjectId(rs.getInt("subjectId"));
                 a.setTitle(rs.getString("title"));
                 a.setStatus(rs.getString("status"));
-                a.setDueDate(rs.getTimestamp("dueDate").toLocalDateTime());
+
+                Timestamp ts = rs.getTimestamp("dueDate");
+                if (ts != null) {
+                    a.setDueDate(ts.toLocalDateTime());
+                }
+
                 list.add(a);
             }
 
@@ -42,8 +48,28 @@ public class AssignmentDAO {
 
             ps.setInt(1, a.getSubjectId());
             ps.setString(2, a.getTitle());
-            ps.setTimestamp(3, Timestamp.valueOf(a.getDueDate()));
 
+            if (a.getDueDate() != null) {
+                ps.setTimestamp(3, Timestamp.valueOf(a.getDueDate()));
+            } else {
+                ps.setNull(3, Types.TIMESTAMP);
+            }
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean delete(int id) {
+        String sql = "DELETE FROM assignments WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {

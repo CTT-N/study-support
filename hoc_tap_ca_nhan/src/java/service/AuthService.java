@@ -15,10 +15,10 @@ public class AuthService {
         return null;
     }
 
-    public boolean register(User user) {
-        if (userDAO.findByUsername(user.getUsername()) != null) {
-            return false; // trùng username
+    public boolean register(User u1) {
+        if (userDAO.isUsernameOrEmailExists(u1.getUsername(), u1.getEmail())) {
+            return false; // trùng username hoac email
         }
-        return userDAO.insert(user);
+        return userDAO.insert(u1);
     }
 }

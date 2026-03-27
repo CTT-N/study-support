@@ -22,10 +22,10 @@ public class AssignmentController extends HttpServlet {
         List<Assignment> list = dao.findBySubject(subjectId);
 
         req.setAttribute("assignments", list);
-        req.getRequestDispatcher("views/assignment/list.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/assignment/list.jsp").forward(req, resp);
     }
 
-    // CREATE + UPDATE STATUS
+    // CREATE + UPDATE STATUS + delete
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
@@ -50,6 +50,11 @@ public class AssignmentController extends HttpServlet {
             String status = req.getParameter("status");
 
             dao.updateStatus(id, status);
+            
+        } else if ("delete".equals(action)) {
+
+            int id = Integer.parseInt(req.getParameter("id"));
+            dao.delete(id);
         }
 
         resp.sendRedirect("assignments?subjectId=" + req.getParameter("subjectId"));
