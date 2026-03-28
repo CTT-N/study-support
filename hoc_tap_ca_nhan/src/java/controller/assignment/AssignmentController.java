@@ -16,7 +16,8 @@ public class AssignmentController extends HttpServlet {
     // LẤY DANH SÁCH
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        
+        //chỉ ứng với môn có id=1
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
 
         List<Assignment> list = dao.findBySubject(subjectId);
@@ -25,7 +26,7 @@ public class AssignmentController extends HttpServlet {
         req.getRequestDispatcher("/views/assignment/list.jsp").forward(req, resp);
     }
 
-    // CREATE + UPDATE STATUS + delete
+    // Create + update status + delete
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 

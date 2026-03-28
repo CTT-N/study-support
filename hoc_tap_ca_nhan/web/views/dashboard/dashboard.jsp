@@ -1,6 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.*, model.Assignment" %>
 
+<!-- kiem tra dang nhap? neu chua quay ve trang index.jsp-->
+<%
+    HttpSession s1 = request.getSession(false);
+    if(s1 == null || s1.getAttribute("user")==null){
+        response.sendRedirect("index.jsp");
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>

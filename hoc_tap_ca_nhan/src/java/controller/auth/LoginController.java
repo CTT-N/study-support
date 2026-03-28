@@ -23,7 +23,7 @@ public class LoginController extends HttpServlet {
             resp.sendRedirect("dashboard");
         } else {
             req.setAttribute("error", "Sai tài khoản hoặc mật khẩu");
-            req.getRequestDispatcher("views/auth/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("/views/auth/login.jsp").forward(req, resp);
         }
     }
     @Override

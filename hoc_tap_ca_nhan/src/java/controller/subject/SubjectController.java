@@ -1,10 +1,11 @@
 package controller.subject;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
 import model.Subject;
 import model.User;
 import dao.SubjectDAO;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +14,7 @@ public class SubjectController extends HttpServlet {
 
     private SubjectDAO dao = new SubjectDAO();
 
+    // lay danh sach mon hoc
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -21,20 +23,32 @@ public class SubjectController extends HttpServlet {
         List<Subject> list = dao.findByUser(user.getId());
         req.setAttribute("subjects", list);
 
-        req.getRequestDispatcher("views/subject/list.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/subject/list.jsp").forward(req, resp);
     }
-
+    
+    // create + delete (khi xóa 1 môn học thì tất cả các dữ liệu kèm theo như assignment,.. cũng bị xóa theo)
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+        throws IOException {
+
+        String action = req.getParameter("action");
 
         User user = (User) req.getSession().getAttribute("user");
 
-        Subject s = new Subject();
-        s.setUserId(user.getId());
-        s.setSubjectName(req.getParameter("name"));
-        s.setDescription(req.getParameter("description"));
+        if ("create".equals(action)) {
 
-        dao.insert(s);
+            Subject s = new Subject();
+            s.setUserId(user.getId());
+            s.setSubjectName(req.getParameter("name"));
+            s.setDescription(req.getParameter("desc"));
+
+            dao.insert(s);
+
+        } else if ("delete".equals(action)) {
+
+            int id = Integer.parseInt(req.getParameter("id"));
+            dao.delete(id);
+        }
+
         resp.sendRedirect("subjects");
     }
 }
