@@ -31,6 +31,25 @@
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ChangePasswordController</servlet-name>
+        <servlet-class>controller.auth.ChangePasswordController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordController</servlet-name>
+        <url-pattern>/changePassword</url-pattern>
+    </servlet-mapping>
+    
+<!-- User -->
+    <servlet>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>controller.user.UserController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/user</url-pattern>
+    </servlet-mapping>
 
 <!-- SUBJECT -->
     <servlet>

@@ -3,35 +3,83 @@ package controller.user;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import model.User;
+import service.AuthService;
 
 import java.io.IOException;
 
 public class UserController extends HttpServlet {
 
-    // XEM PROFILE
+    private AuthService authService = new AuthService();
+    
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        User user = (User) req.getSession().getAttribute("user");
+        HttpSession session = req.getSession(false);
 
+        // check login
+        if (session == null || session.getAttribute("user") == null) {
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            return;
+        }
+
+        String action = req.getParameter("action");
+
+        // vào trang edit profile
+        if ("editProfile".equals(action)) {
+            req.getRequestDispatcher("/views/user/editProfile.jsp")
+               .forward(req, resp);
+            return;
+        }
+
+        // mặc định: profile
+        User user = (User) session.getAttribute("user");
         req.setAttribute("user", user);
-        req.getRequestDispatcher("views/user/profile.jsp").forward(req, resp);
+
+        req.getRequestDispatcher("/views/user/profile.jsp")
+           .forward(req, resp);
     }
 
-    // UPDATE PROFILE
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException, ServletException {
 
-        HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
+        HttpSession session = req.getSession(false);
 
-        user.setFullName(req.getParameter("fullName"));
-        user.setEmail(req.getParameter("email"));
+        if (session == null || session.getAttribute("user") == null) {
+            resp.sendRedirect(req.getContextPath() + "/index.jsp");
+            return;
+        }
 
-        // ⚠️ hiện chưa update DB (bạn có thể thêm UserDAO.update)
+        String action = req.getParameter("action");
 
-        session.setAttribute("user", user);
+        // xử lý update profile
+        if ("editProfile".equals(action)) {
 
-        resp.sendRedirect("profile");
+            User user = (User) session.getAttribute("user");
+
+            String fullName = req.getParameter("fullName");
+            String email = req.getParameter("email");
+
+            user.setFullName(fullName);
+            user.setEmail(email);
+
+            String result = authService.updateProfile(user);
+
+            if ("SUCCESS".equals(result)) {
+
+                session.setAttribute("user", user);
+                session.setAttribute("success", "Cập nhật thành công!");
+
+                resp.sendRedirect(req.getContextPath() + "/user");
+                return;
+
+            } else {
+                req.setAttribute("error", result);
+
+                req.getRequestDispatcher("/views/user/editProfile.jsp")
+                   .forward(req, resp);
+            }
+        }
     }
 }

@@ -1,35 +1,32 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.*, model.Assignment" %>
 
-<!-- kiem tra dang nhap? neu chua quay ve trang index.jsp-->
+<!-- kiểm tra đăng nhập -->
 <%
     HttpSession s1 = request.getSession(false);
-    if(s1 == null || s1.getAttribute("user")==null){
+    if (s1 == null || s1.getAttribute("user") == null) {
         response.sendRedirect("index.jsp");
+        return;
     }
+
+    request.setAttribute("activePage", "home");
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Trang chủ</title>
 
     <style>
         body {
-            font-family: Arial;
-            background: #f4f6f9;
             margin: 0;
+            font-family: Arial;
+            background-color: #f5f5f5;
         }
 
-        .header {
-            background: #007bff;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .container {
-            padding: 30px;
+        .content {
+            margin-left: 240px;
+            padding: 20px;
         }
 
         .cards {
@@ -38,60 +35,46 @@
         }
 
         .card {
-            flex: 1;
             padding: 20px;
-            border-radius: 10px;
-            color: white;
+            border-radius: 8px;
+            border: 2px solid;
+            min-width: 150px;
+            text-align: center;
+            background: white;
         }
 
-        .blue { background: #007bff; }
-        .orange { background: #ffc107; }
-        .red { background: #dc3545; }
-
-        h2 {
-            margin: 0;
-        }
+        .blue { border-color: #4da6ff; }
+        .orange { border-color: orange; }
+        .gray { border-color: gray; }
 
         .section {
             margin-top: 30px;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: white;
+            width: 400px;
         }
 
         ul {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            list-style: none;
-        }
-
-        li {
-            padding: 8px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .nav {
-            margin-top: 20px;
-        }
-
-        a {
-            text-decoration: none;
-            margin-right: 15px;
+            padding-left: 20px;
         }
     </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1>Dashboard</h1>
-</div>
+<%-- Sidebar dùng chung (tìm đúng vị trí tương đối của thư mục so với file này) --%>
+<jsp:include page="../common/sidebar.jsp" />
 
-<div class="container">
+<div class="content">
+    <h2>Trang chủ</h2>
 
     <!-- Thống kê -->
     <div class="cards">
         <div class="card blue">
             <h2><%= request.getAttribute("totalSubjects") %></h2>
-            <p>Tổng môn học</p>
+            <p>Số môn học</p>
         </div>
 
         <div class="card orange">
@@ -99,7 +82,7 @@
             <p>Chưa hoàn thành</p>
         </div>
 
-        <div class="card red">
+        <div class="card gray">
             <h2><%= request.getAttribute("overdueAssignments") %></h2>
             <p>Quá hạn</p>
         </div>
@@ -107,7 +90,7 @@
 
     <!-- Upcoming -->
     <div class="section">
-        <h3>Assignment sắp đến hạn</h3>
+        <h3>Nhiệm vụ sắp đến hạn</h3>
 
         <ul>
         <%
@@ -117,25 +100,18 @@
                 for (Assignment a : upcoming) {
         %>
             <li>
-                <b><%= a.getTitle() %></b>
-                - <%= a.getDueDate() != null ? a.getDueDate() : "Không có hạn" %>
+                <b><%= a.getTitle() %></b> -
+                <%= a.getDueDate() != null ? a.getDueDate() : "Không có hạn" %>
             </li>
         <%
                 }
             } else {
         %>
-            <li>Không có assignment nào</li>
+            <li>Không có nhiệm vụ nào</li>
         <%
             }
         %>
         </ul>
-    </div>
-
-    <!-- Navigation -->
-    <div class="nav">
-        <a href="subjects">Môn học</a>
-        <a href="assignments?subjectId=1">Assignment</a>
-        <a href="logout">Đăng xuất</a>
     </div>
 
 </div>
