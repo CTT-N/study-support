@@ -67,7 +67,9 @@
 <jsp:include page="../common/sidebar.jsp" />
 
 <div class="content">
-    <a href="subjects">← Về lại danh sách môn học</a>
+<a href="subjects">
+    <button style="margin-bottom:15px;">⬅ Quay lại danh sách môn học</button>
+</a>
 
     <h2>Tài liệu môn học</h2>
 

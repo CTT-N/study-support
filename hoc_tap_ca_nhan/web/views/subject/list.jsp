@@ -76,10 +76,17 @@
         <form method="post" action="subjects">
             <input type="hidden" name="action" value="create"/>
 
-            <input type="text" name="name" placeholder="Tên môn" required/>
-            <input type="text" name="desc" placeholder="Mô tả"/>
+            <input type="text" name="name" required/>
+            <input type="text" name="desc"/>
 
             <button type="submit">Thêm môn</button>
+        </form>
+        <form method="get" action="subjects">
+            <input type="hidden" name="action" value="search"/>
+
+            <input type="text" name="keyword" value="${keyword}" placeholder="Tìm môn..."/>
+
+            <button type="submit">Tìm</button>
         </form>
     </div>
 

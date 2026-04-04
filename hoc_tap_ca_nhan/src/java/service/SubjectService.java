@@ -25,4 +25,8 @@ public class SubjectService {
     public boolean deleteSubject(int id) {
         return dao.delete(id);
     }
+    
+    public List<Subject> searchByName(int userId, String key){
+        return dao.findByName(userId, key);
+    }
 }

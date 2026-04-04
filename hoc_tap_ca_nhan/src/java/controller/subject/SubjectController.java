@@ -16,13 +16,28 @@ public class SubjectController extends HttpServlet {
 
     // lay danh sach mon hoc
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
 
         User user = (User) req.getSession().getAttribute("user");
+        String action = req.getParameter("action");
 
-        List<Subject> list = dao.findByUser(user.getId());
+        List<Subject> list;
+
+        if ("search".equals(action)) {
+            String key = req.getParameter("keyword");
+
+            if (key == null || key.trim().isEmpty()) {
+                list = dao.findByUser(user.getId());
+            } else {
+                list = dao.findByName(user.getId(), key);
+            }
+
+            req.setAttribute("keyword", key);
+        } else {
+            list = dao.findByUser(user.getId());
+        }
+
         req.setAttribute("subjects", list);
-
         req.getRequestDispatcher("/views/subject/list.jsp").forward(req, resp);
     }
     
@@ -48,7 +63,7 @@ public class SubjectController extends HttpServlet {
             int id = Integer.parseInt(req.getParameter("id"));
             dao.delete(id);
         }
-
+        
         resp.sendRedirect("subjects");
     }
 }

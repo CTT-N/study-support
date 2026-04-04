@@ -12,7 +12,7 @@ public class SubjectDAO {
     public List<Subject> findByUser(int userId) {
         List<Subject> list = new ArrayList<>();
 
-        // tìm môn học theo mã
+        // tìm môn học theo mã nguoi dung
         String sql = "SELECT * FROM subjects WHERE userId = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -68,5 +68,29 @@ public class SubjectDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    public List<Subject> findByName(int userId, String key){
+        List<Subject> ds = new ArrayList<>();
+        String sql = "SELECT * FROM subjects WHERE userId = ? AND LOWER(subjectName) LIKE LOWER(?)";
+
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setString(2, "%" + key + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                Subject s = new Subject();
+                s.setId(rs.getInt("id"));
+                s.setSubjectName(rs.getString("subjectName"));
+                s.setDescription(rs.getString("description"));
+                ds.add(s);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return ds;
     }
 }
