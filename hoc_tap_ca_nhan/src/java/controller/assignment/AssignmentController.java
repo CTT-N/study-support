@@ -26,7 +26,7 @@ public class AssignmentController extends HttpServlet {
             Assignment a = dao.findById(id);
 
             req.setAttribute("assignment", a);
-            req.getRequestDispatcher("/views/assignment/edit.jsp")
+            req.getRequestDispatcher("/views/assignment/assignment-edit.jsp")
                .forward(req, resp);
             return; // rất quan trọng
         }
@@ -36,7 +36,7 @@ public class AssignmentController extends HttpServlet {
         List<Assignment> list = dao.findBySubject(subjectId);
 
         req.setAttribute("assignments", list);
-        req.getRequestDispatcher("/views/assignment/list.jsp")
+        req.getRequestDispatcher("/views/assignment/assignment-list.jsp")
            .forward(req, resp);
     }
 

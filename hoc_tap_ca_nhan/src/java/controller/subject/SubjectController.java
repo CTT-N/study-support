@@ -38,7 +38,7 @@ public class SubjectController extends HttpServlet {
         }
 
         req.setAttribute("subjects", list);
-        req.getRequestDispatcher("/views/subject/list.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/subject/subject-list.jsp").forward(req, resp);
     }
     
     // create + delete (khi xóa 1 môn học thì tất cả các dữ liệu kèm theo như assignment,.. cũng bị xóa theo)

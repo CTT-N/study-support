@@ -96,6 +96,10 @@
     %>
         <p id="msgBox" class="msg-error">Upload thất bại!</p>
     <%
+        } else if ("invalid".equals(msg)) {
+    %>
+        <p id="msgBox" class="msg-error">Chỉ cho phép ảnh hoặc PDF!</p>
+    <%
         }
     %>
 

@@ -1,4 +1,5 @@
 package controller.document;
+
 import dao.DocumentDAO;
 import model.Document;
 
@@ -13,67 +14,99 @@ import java.util.List;
 
 @MultipartConfig
 public class DocumentController extends HttpServlet {
+
     private DocumentDAO dao = new DocumentDAO();
-    
-    // hien thi cac tai lieu (cua mon dau tien trong danh sach mon hoc)
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // mon hoc co id=1 do lay dau danh sach
+
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
-        
+
         List<Document> ds = dao.findBySubject(subjectId);
-        
+
         req.setAttribute("documents", ds);
         req.setAttribute("subjectId", subjectId);
-        
-        req.getRequestDispatcher("/views/document/list.jsp").forward(req, resp);
+
+        req.getRequestDispatcher("/views/document/document-list.jsp").forward(req, resp);
     }
-    // upload + delete tai lieu
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        //1. upload tai lieu
+
+        String action = req.getParameter("action");
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
-        
+
+        // ------- xóa tài liệu
+        if ("delete".equals(action)) {
+
+            int id = Integer.parseInt(req.getParameter("id"));
+
+            Document doc = dao.findById(id);
+
+            if (doc != null) {
+                String fullPath = getServletContext().getRealPath("/") + doc.getFilePath();
+                File f = new File(fullPath);
+                if (f.exists()) f.delete(); // xóa file vật lý
+            }
+
+            dao.delete(id);
+
+            resp.sendRedirect("documents?subjectId=" + subjectId);
+            return;
+        }
+
+        // ---------upload tai lieu
         Part filePart = req.getPart("file");
-        
-        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        
-        // thu muc luu file
-        String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
-        
-        File uploadDir = new File(uploadPath);
-        if(!uploadDir.exists())
-            uploadDir.mkdir();// chua co thi tao ra
-        
-        String filePath = uploadPath + File.separator + fileName;
-        
-        filePart.write(fileName);
-        
-        // luu DB
+
+        String fileName = Paths.get(filePart.getSubmittedFileName())
+                               .getFileName().toString();
+
+        // validate file (kieemr tra file upload là loại gì, cho phép pdf, docx, ảnh
+        String type = filePart.getContentType();
+
+        boolean isValid =
+                type.startsWith("image") ||
+                type.equals("application/pdf") ||
+                type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        if (!isValid) {
+            resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=invalid");
+            return;
+        }
+
+        // tạo thư mục uploads
+        String uploadPath = getServletContext().getRealPath("/uploads");
+
+        // tạo thư mục theo subject
+        String subjectFolder = uploadPath + File.separator + "subject_" + subjectId;
+
+        File dir = new File(subjectFolder);
+        if (!dir.exists()) dir.mkdirs();
+
+        // ====== tránh trùng tên file ======
+        String newFileName = System.currentTimeMillis() + "_" + fileName;
+
+        String filePath = subjectFolder + File.separator + newFileName;
+
+        // lưu file
+        filePart.write(filePath);
+
+        // lưu DB
         Document d = new Document();
         d.setSubjectId(subjectId);
-        d.setDocumentName(fileName);
-        d.setFilePath("uploads/"+fileName);
-        d.setFileType(filePart.getContentType());
+        d.setDocumentName(newFileName);
+        d.setFilePath("uploads/subject_" + subjectId + "/" + newFileName);
+        d.setFileType(type);
         d.setFileSize(filePart.getSize());
-        
+
         boolean success = dao.insert(d);
 
         if (success) {
             resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=success");
         } else {
             resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=error");
-        }
-        
-        //2.delete
-        String action = req.getParameter("action");
-        if("delete".equals(action)){
-            int id = Integer.parseInt(req.getParameter("id"));
-            dao.delete(id);
-            resp.sendRedirect("documents?subjectId="+req.getParameter("subjectId"));
-            return;
         }
     }
 }

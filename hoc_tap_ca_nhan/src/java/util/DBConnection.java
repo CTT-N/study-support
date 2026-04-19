@@ -13,3 +13,8 @@ public class DBConnection {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }
+/*
+tài khoản tạo để dùng thử: 
+username: hoctap
+password: 123456
+*/

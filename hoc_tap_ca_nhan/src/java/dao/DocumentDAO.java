@@ -65,4 +65,25 @@ public class DocumentDAO {
         }
         return false;
     }
+    
+    public Document findById(int id){
+        String sql = "select * from documents where id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)){
+            
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                Document d = new Document();
+                d.setId(rs.getInt("id"));
+                d.setFilePath(rs.getString("filePath"));
+                return d;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
