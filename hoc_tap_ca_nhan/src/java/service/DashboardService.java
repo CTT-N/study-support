@@ -74,12 +74,12 @@ public class DashboardService {
         List<Assignment> list = new ArrayList<>();
 
         String sql = """
-                SELECT a.*
+                SELECT a.*, s.subjectName 
                 FROM assignments a
                 JOIN subjects s ON a.subjectId = s.id
                 WHERE s.userId = ?
                 AND a.status = 'PENDING'
-                AND a.dueDate IS NOT NULL
+                AND a.dueDate >= NOW()
                 ORDER BY a.dueDate ASC
                 LIMIT 5
                 """;
@@ -97,6 +97,7 @@ public class DashboardService {
                 a.setSubjectId(rs.getInt("subjectId"));
                 a.setTitle(rs.getString("title"));
                 a.setStatus(rs.getString("status"));
+                a.setSubjectName(rs.getString("subjectName"));
 
                 Timestamp ts = rs.getTimestamp("dueDate");
                 if (ts != null) {

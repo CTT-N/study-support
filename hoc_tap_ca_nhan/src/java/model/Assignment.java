@@ -11,6 +11,11 @@ public class Assignment {
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String type; // bổ xung
+    
+    private String subjectName;// thêm để dễ hiển thị
+
+
     public int getId() {
         return id;
     }
@@ -58,6 +63,15 @@ public class Assignment {
     }
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+        public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
 }

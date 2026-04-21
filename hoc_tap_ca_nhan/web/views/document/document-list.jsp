@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.*, model.Document" %>
+<%@ page import="model.Subject" %>
 
 <%
     request.setAttribute("activePage", "subjects");
+    Subject subject = (Subject) request.getAttribute("subject");
 %>
 
 <!DOCTYPE html>
@@ -71,7 +73,12 @@
     <button style="margin-bottom:15px;">⬅ Quay lại danh sách môn học</button>
 </a>
 
-    <h2>Tài liệu môn học</h2>
+    <h2>Tài liệu môn học
+        <% if (subject != null) { %>
+            <span style="color:#888;">|</span>
+            <span style="color:#4CAF50;"><%= subject.getSubjectName() %></span>
+        <% } %>
+    </h2>
 
     <!-- UPLOAD -->
     <div class="upload-box">

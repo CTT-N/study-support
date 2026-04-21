@@ -1,6 +1,7 @@
 package controller.document;
 
 import dao.DocumentDAO;
+import dao.SubjectDAO;
 import model.Document;
 
 import jakarta.servlet.*;
@@ -11,20 +12,25 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import model.Subject;
 
 @MultipartConfig
 public class DocumentController extends HttpServlet {
 
     private DocumentDAO dao = new DocumentDAO();
+    private SubjectDAO subjectDAO = new SubjectDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
-
         List<Document> ds = dao.findBySubject(subjectId);
-
+        
+        // thêm đoạn này để lấy tên môn học
+        Subject subject = subjectDAO.findById(subjectId);
+        req.setAttribute("subject", subject);
+        
         req.setAttribute("documents", ds);
         req.setAttribute("subjectId", subjectId);
 

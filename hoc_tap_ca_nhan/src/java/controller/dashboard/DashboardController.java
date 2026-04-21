@@ -19,12 +19,10 @@ public class DashboardController extends HttpServlet {
 
         //Check login
         HttpSession session = req.getSession(false);
-
         if (session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login");
             return;
         }
-
         User user = (User) session.getAttribute("user");
         int userId = user.getId();
 

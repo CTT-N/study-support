@@ -93,4 +93,26 @@ public class SubjectDAO {
         }
         return ds;
     }
+        public Subject findById(int id) {
+        String sql = "SELECT * FROM subjects WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Subject s = new Subject();
+                s.setId(rs.getInt("id"));
+                s.setSubjectName(rs.getString("subjectName"));
+                s.setDescription(rs.getString("description"));
+                return s;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

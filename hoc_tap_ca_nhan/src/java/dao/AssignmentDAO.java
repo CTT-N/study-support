@@ -12,13 +12,7 @@ public class AssignmentDAO {
     public List<Assignment> findBySubject(int subjectId) {
         List<Assignment> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM assignments WHERE subjectId = ? " +
-                     "ORDER BY " +
-                     "CASE " +
-                     "WHEN status = 'overdue' THEN 1 " +
-                     "WHEN status = 'pending' THEN 2 " +
-                     "WHEN status = 'done' THEN 3 " +
-                     "END, dueDate ASC";
+        String sql = "SELECT * FROM assignments WHERE subjectId = ? ORDER BY dueDate ASC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -32,27 +26,15 @@ public class AssignmentDAO {
                 a.setId(rs.getInt("id"));
                 a.setSubjectId(rs.getInt("subjectId"));
                 a.setTitle(rs.getString("title"));
+                a.setDescription(rs.getString("description")); // hiển thị thêm
+                a.setType(rs.getString("type")); // thêm
                 a.setStatus(rs.getString("status"));
 
-                // createdAt
                 Timestamp createdTs = rs.getTimestamp("createdAt");
-                if (createdTs != null) {
-                    a.setCreatedAt(createdTs.toLocalDateTime());
-                }
+                if (createdTs != null) a.setCreatedAt(createdTs.toLocalDateTime());
 
-                // dueDate
                 Timestamp dueTs = rs.getTimestamp("dueDate");
-                if (dueTs != null) {
-                    a.setDueDate(dueTs.toLocalDateTime());
-                }
-
-                // tự động đánh dấu quá hạn
-                if (a.getDueDate() != null
-                        && a.getDueDate().isBefore(java.time.LocalDateTime.now())
-                        && !"done".equalsIgnoreCase(a.getStatus())) {
-
-                    a.setStatus("overdue");
-                }
+                if (dueTs != null) a.setDueDate(dueTs.toLocalDateTime());
 
                 list.add(a);
             }
@@ -63,19 +45,22 @@ public class AssignmentDAO {
 
         return list;
     }
+    
     public boolean insert(Assignment a) {
-        String sql = "INSERT INTO assignments(subjectId, title, dueDate) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO assignments(subjectId, title, description, type, dueDate) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, a.getSubjectId());
             ps.setString(2, a.getTitle());
+            ps.setString(3, a.getDescription());// ghi ca mo tả
+            ps.setString(4, a.getType());
 
             if (a.getDueDate() != null) {
-                ps.setTimestamp(3, Timestamp.valueOf(a.getDueDate()));
+                ps.setTimestamp(5, Timestamp.valueOf(a.getDueDate()));
             } else {
-                ps.setNull(3, Types.TIMESTAMP);
+                ps.setNull(5, Types.TIMESTAMP);
             }
 
             return ps.executeUpdate() > 0;
@@ -84,8 +69,7 @@ public class AssignmentDAO {
             e.printStackTrace();
         }
         return false;
-    }
-    
+    }    
     public boolean delete(int id) {
         String sql = "DELETE FROM assignments WHERE id = ?";
 
@@ -121,20 +105,22 @@ public class AssignmentDAO {
     
     // thay doi thong tin ve nhiem vu
     public boolean update(Assignment a) {
-        String sql = "UPDATE assignments SET title = ?, dueDate = ? WHERE id = ?";
+        String sql = "UPDATE assignments SET title=?, description=?, type=?, dueDate=? WHERE id=?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, a.getTitle());
+            ps.setString(2, a.getDescription());
+            ps.setString(3, a.getType());
 
             if (a.getDueDate() != null) {
-                ps.setTimestamp(2, Timestamp.valueOf(a.getDueDate()));
+                ps.setTimestamp(4, Timestamp.valueOf(a.getDueDate()));
             } else {
-                ps.setNull(2, Types.TIMESTAMP);
+                ps.setNull(4, Types.TIMESTAMP);
             }
 
-            ps.setInt(3, a.getId());
+            ps.setInt(5, a.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -160,6 +146,8 @@ public class AssignmentDAO {
                 a.setSubjectId(rs.getInt("subjectId"));
                 a.setTitle(rs.getString("title"));
                 a.setStatus(rs.getString("status"));
+                a.setDescription(rs.getString("description"));
+                a.setType(rs.getString("type"));
 
                 Timestamp createdTs = rs.getTimestamp("createdAt");
                 if (createdTs != null) {

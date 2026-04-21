@@ -99,9 +99,25 @@
             if (upcoming != null && !upcoming.isEmpty()) {
                 for (Assignment a : upcoming) {
         %>
+            <%
+                java.time.format.DateTimeFormatter fmt = 
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            %>
+
             <li>
-                <b><%= a.getTitle() %></b> -
-                <%= a.getDueDate() != null ? a.getDueDate() : "Không có hạn" %>
+                <div>
+                    <span style="color:#4CAF50; font-weight:600;">
+                        <%= a.getSubjectName() %>
+                    </span>
+                </div>
+
+                <div>
+                    <%= a.getTitle() %>
+                </div>
+
+                <div style="font-size:12px; color:#888;">
+                    ⏰ <%= a.getDueDate() != null ? a.getDueDate().format(fmt) : "Không có hạn" %>
+                </div>
             </li>
         <%
                 }
