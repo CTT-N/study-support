@@ -1,0 +1,13 @@
+.upload-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.doc-card {
+    background: white;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+}

@@ -1,36 +1,28 @@
-<%-- 
-    Document   : editProfile
-    Created on : Mar 31, 2026, 5:24:25 PM
-    Author     : ADMIN
---%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <%-- Sidebar dùng chung (tìm đúng vị trí tương đối của thư mục so với file này) --%>
-        <jsp:include page="../common/sidebar.jsp" />
-        
-        <div style="margin-left:240px; padding:40px;">
-    
-            <h2>Sửa thông tin</h2>
+<div class="form-wrapper">
 
-            <form action="${pageContext.request.contextPath}/user" method="post">
-                <input type="hidden" name="action" value="editProfile">
+    <div class="form-box">
 
-                <input type="text" name="fullName" value="${user.fullName}">
-                <input type="email" name="email" value="${user.email}">
+        <h2>Sửa thông tin</h2>
 
-                <button type="submit">Cập nhật</button>
-            </form>
+        <form action="${pageContext.request.contextPath}/user" method="post">
+            <input type="hidden" name="action" value="editProfile">
 
-            <p style="color:green">${success}</p>
-            <p style="color:red">${error}</p>
+            <input type="text" name="fullName" value="${user.fullName}" placeholder="Họ tên">
+            <input type="email" name="email" value="${user.email}" placeholder="Email">
 
-        </div>
-    </body>
-</html>
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Cập nhật</button>
+
+                <a href="${pageContext.request.contextPath}/user">
+                    <button type="button" class="btn-cancel">Hủy</button>
+                </a>
+            </div>
+        </form>
+
+        <p class="success">${success}</p>
+        <p class="error">${error}</p>
+
+    </div>
+</div>

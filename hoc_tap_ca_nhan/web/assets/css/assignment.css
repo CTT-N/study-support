@@ -1,0 +1,15 @@
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: white;
+}
+
+.pending { background: orange; }
+.done { background: green; }
+.overdue { background: red; }

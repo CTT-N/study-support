@@ -19,8 +19,8 @@ public class AuthFilter implements Filter {
             uri.contains("register") ||
             uri.contains("index.jsp") ||
             uri.endsWith("/") ||
-            uri.contains("assets")) {
-
+            uri.contains("assets") ||
+            uri.contains("/views/")) {
             chain.doFilter(request, response);
             return;
         }
@@ -28,7 +28,7 @@ public class AuthFilter implements Filter {
         HttpSession session = req.getSession(false);
 
         if (session == null || session.getAttribute("user") == null) {
-            resp.sendRedirect("login");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 

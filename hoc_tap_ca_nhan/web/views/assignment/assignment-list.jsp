@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="java.util.*, model.Assignment, java.time.format.DateTimeFormatter" %>
 <%@ page import="model.Subject" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <%
     List<Assignment> list = (List<Assignment>) request.getAttribute("assignments");
@@ -8,119 +9,6 @@
     DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     Subject subject = (Subject) request.getAttribute("subject");
 %>
-
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Danh sách nhiệm vụ</title>
-        <style>
-            body {
-                margin: 0;
-                font-family: 'Segoe UI', sans-serif;
-                background: #f0f2f5;
-            }
-
-            .content {
-                margin-left: 240px;
-                padding: 30px;
-            }
-
-            .card {
-                background: white;
-                padding: 25px;
-                border-radius: 12px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                width: 900px;
-            }
-
-            h3 {
-                margin-bottom: 20px;
-            }
-
-            .top-bar {
-                display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
-                margin-bottom: 15px;
-            }
-
-            .top-bar input, .top-bar select {
-                padding: 8px;
-                border-radius: 6px;
-                border: 1px solid #ccc;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            th, td {
-                padding: 12px;
-                text-align: center;
-            }
-
-            tr:hover {
-                background: #f9f9f9;
-            }
-
-            /* STATUS BADGE */
-            .badge {
-                padding: 5px 10px;
-                border-radius: 6px;
-                color: white;
-                font-size: 13px;
-            }
-
-            .pending { background: #f0ad4e; }
-            .done { background: #5cb85c; }
-            .overdue { background: #d9534f; }
-
-            /* BUTTON */
-            .delete-btn {
-                border: none;
-                background: #ff4d4f;
-                color: white;
-                padding: 6px 10px;
-                border-radius: 6px;
-            }
-
-            .delete-btn:hover {
-                background: #d9363e;
-            }
-            .type-badge {
-                padding: 4px 8px;
-                border-radius: 6px;
-                font-size: 12px;
-                font-weight: 500;
-            }
-
-            .assignment {
-                background: #e3f2fd;
-                color: #1976d2;
-            }
-
-            .exam {
-                background: #fff3cd;
-                color: #856404;
-            }
-
-            .exam-row {
-                background: #fffdf5;
-            }
-
-            .exam-row:hover {
-                background: #fff7e6;
-            }
-            </style>
-    </head>
-    <body>
-        <%-- Sidebar dùng chung (tìm đúng vị trí tương đối của thư mục so với file này) --%>
-        <jsp:include page="../common/sidebar.jsp" />
-        
-<div class="content">
 
 <a href="subjects">
     <button style="margin-bottom:15px;">⬅ Quay lại danh sách môn học</button>
@@ -157,7 +45,7 @@
         </form>
 
         <!-- TABLE -->
-        <table>
+        <table class="table table-hover align-middle">
             <tr>
                 <th>Loại</th>
                 <th>Tên</th>
@@ -269,7 +157,3 @@
 <% } %>
         </table>
     </div>
-</div>
-    
-    </body>
-</html>

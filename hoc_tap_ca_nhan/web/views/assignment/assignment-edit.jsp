@@ -2,37 +2,7 @@
 <%@ page import="model.Assignment" %>
 <%@ page import="model.Subject" %>
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <style>
-        form {
-            max-width: 400px;
-        }
-
-        form input, form select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        form button {
-            padding: 8px 15px;
-            border-radius: 6px;
-            border: none;
-            background: #4CAF50;
-            color: white;
-        }
-        </style>
-    </head>
-    <body>
-        <%-- Sidebar dùng chung (tìm đúng vị trí tương đối của thư mục so với file này) --%>
-        <jsp:include page="../common/sidebar.jsp" />
-        
-        <div style="margin-left:240px; padding:20px;">
+<div style="margin-left:240px; padding:20px;">
             <%
                 Assignment a = (Assignment) request.getAttribute("assignment");
                 Subject subject = (Subject) request.getAttribute("subject");
@@ -92,6 +62,3 @@
             </form>
 
         </div>
-
-    </body>
-</html>

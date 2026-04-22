@@ -37,8 +37,16 @@ public class SubjectController extends HttpServlet {
             list = dao.findByUser(user.getId());
         }
 
+        // set data
         req.setAttribute("subjects", list);
-        req.getRequestDispatcher("/views/subject/subject-list.jsp").forward(req, resp);
+        // set layout
+        req.setAttribute("activePage", "subjects");
+        req.setAttribute("pageTitle", "Danh sách môn học");
+        req.setAttribute("pageCss", "subject.css");
+        req.setAttribute("contentPage", "/views/subject/subject-list.jsp");
+        // forward
+        req.getRequestDispatcher("/views/common/layout.jsp")
+            .forward(req, resp);
     }
     
     // create + delete (khi xóa 1 môn học thì tất cả các dữ liệu kèm theo như assignment,.. cũng bị xóa theo)

@@ -28,8 +28,9 @@ public class AssignmentController extends HttpServlet {
             Assignment a = dao.findById(id);
 
             req.setAttribute("assignment", a);
-            req.getRequestDispatcher("/views/assignment/assignment-edit.jsp")
-               .forward(req, resp);
+            req.setAttribute("contentPage", "/views/assignment/assignment-edit.jsp");
+            req.getRequestDispatcher("/views/common/layout.jsp")
+                .forward(req, resp);
             return; // rất quan trọng
         }
 
@@ -40,12 +41,18 @@ public class AssignmentController extends HttpServlet {
         // thêm đoạn này để lấy tên môn học
         SubjectDAO subjectDAO = new SubjectDAO();
         Subject subject = subjectDAO.findById(subjectId);
-
+        
+        //set data
         req.setAttribute("subject", subject);
-
         req.setAttribute("assignments", list);
-        req.getRequestDispatcher("/views/assignment/assignment-list.jsp")
-           .forward(req, resp);
+        // set layout
+        req.setAttribute("activePage", "subjects");
+        req.setAttribute("pageTitle", "Nhiệm vụ");
+        req.setAttribute("pageCss", "assignment.css");
+        req.setAttribute("contentPage", "/views/assignment/assignment-list.jsp");
+        // forward
+        req.getRequestDispatcher("/views/common/layout.jsp")
+            .forward(req, resp);
     }
 
     // Create + update status + delete

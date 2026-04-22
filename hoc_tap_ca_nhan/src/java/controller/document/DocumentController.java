@@ -29,12 +29,18 @@ public class DocumentController extends HttpServlet {
         
         // thêm đoạn này để lấy tên môn học
         Subject subject = subjectDAO.findById(subjectId);
+        //set data
         req.setAttribute("subject", subject);
-        
         req.setAttribute("documents", ds);
         req.setAttribute("subjectId", subjectId);
-
-        req.getRequestDispatcher("/views/document/document-list.jsp").forward(req, resp);
+        // set layout
+        req.setAttribute("activePage", "subjects");
+        req.setAttribute("pageTitle", "Tài liệu");
+        req.setAttribute("pageCss", "document.css");
+        req.setAttribute("contentPage", "/views/document/document-list.jsp");
+        //forward
+        req.getRequestDispatcher("/views/common/layout.jsp")
+            .forward(req, resp);
     }
 
     @Override

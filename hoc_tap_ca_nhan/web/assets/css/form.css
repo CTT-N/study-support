@@ -1,0 +1,29 @@
+/* cho trang đổi mk, ..*/
+
+.form-container {
+    margin-left: 260px;
+    padding: 25px;
+    max-width: 400px;
+}
+
+.form-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}

@@ -1,129 +1,85 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.*, model.Subject" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%
-    request.setAttribute("activePage", "subjects");
-%>
+<div class="card p-3 shadow-soft mb-3">
+    <div class="row g-2">
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Danh sách môn học</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background-color: #f5f5f5;
-        }
-
-        .content {
-            margin-left: 240px;
-            padding: 20px;
-        }
-
-        .form-box {
-            background: white;
-            padding: 15px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            width: 400px;
-        }
-
-        .form-box input {
-            margin: 5px 0;
-            padding: 8px;
-            width: 95%;
-        }
-
-        .form-box button {
-            padding: 8px 15px;
-            margin-top: 10px;
-        }
-
-        .subject-card {
-            background: white;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            width: 400px;
-        }
-
-        .actions a {
-            margin-right: 10px;
-            text-decoration: none;
-            color: blue;
-        }
-
-        .actions form {
-            display: inline;
-        }
-    </style>
-</head>
-
-<body>
-
-<%-- Sidebar dùng chung (tìm đúng vị trí tương đối của thư mục so với file này) --%>
-<jsp:include page="../common/sidebar.jsp" />
-
-<div class="content">
-
-    <h2>Danh sách môn học</h2>
-
-    <!-- CREATE -->
-    <div class="form-box">
-        <form method="post" action="subjects">
+        <!-- ===== FORM THÊM ===== -->
+        <form method="post" action="subjects" class="col-md-7 row g-2">
             <input type="hidden" name="action" value="create"/>
 
-            <input type="text" name="name" required/>
-            <input type="text" name="desc"/>
+            <div class="col-md-5">
+                <input class="form-control" name="name" placeholder="Tên môn" required/>
+            </div>
 
-            <button type="submit">Thêm môn</button>
+            <div class="col-md-5">
+                <input class="form-control" name="desc" placeholder="Mô tả"/>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">Thêm</button>
+            </div>
         </form>
-        <form method="get" action="subjects">
+
+        <!-- ===== FORM SEARCH ===== -->
+        <form method="get" action="subjects" class="col-md-5 row g-2">
             <input type="hidden" name="action" value="search"/>
 
-            <input type="text" name="keyword" value="${keyword}" placeholder="Tìm môn..."/>
-
-            <button type="submit">Tìm</button>
-        </form>
-    </div>
-
-    <!-- LIST -->
-    <%
-        List<Subject> ds = (List<Subject>) request.getAttribute("subjects");
-
-        if (ds != null && !ds.isEmpty()) {
-            for (Subject s : ds) {
-    %>
-        <div class="subject-card">
-            <h3><%= s.getSubjectName() %></h3>
-            <p><%= s.getDescription() %></p>
-
-            <div class="actions">
-                <a href="assignments?subjectId=<%= s.getId() %>">Assignment</a>
-                <a href="documents?subjectId=<%= s.getId() %>">Tài liệu</a>
-
-                <!-- DELETE -->
-                <form action="subjects" method="post">
-                    <input type="hidden" name="action" value="delete"/>
-                    <input type="hidden" name="id" value="<%= s.getId() %>"/>
-
-                    <button onclick="return confirm('Xóa môn này?')">Xóa</button>
-                </form>
+            <div class="col-md-8">
+                <input class="form-control"
+                       name="keyword"
+                       value="${keyword}"
+                       placeholder="Tìm môn học..."/>
             </div>
-        </div>
-    <%
-            }
-        } else {
-    %>
-        <p>Chưa có môn học nào</p>
-    <%
-        }
-    %>
 
+            <div class="col-md-4">
+                <button class="btn btn-outline-secondary w-100">
+                    🔍 Tìm
+                </button>
+            </div>
+        </form>
+
+    </div>
 </div>
 
-</body>
-</html>
+<div class="row g-3">
+<c:forEach var="s" items="${subjects}">
+    <div class="col-md-4">
+        <div class="card shadow-soft p-3">
+
+            <h5>${s.subjectName}</h5>
+            <p class="text-muted">${s.description}</p>
+
+            <div class="d-flex justify-content-between">
+
+                <a class="btn btn-outline-primary btn-sm"
+                   href="assignments?subjectId=${s.id}">
+                    Assignment
+                </a>
+
+                <a class="btn btn-outline-success btn-sm"
+                   href="documents?subjectId=${s.id}">
+                    Tài liệu
+                </a>
+
+                <form method="post" action="subjects">
+                    <input type="hidden" name="action" value="delete"/>
+                    <input type="hidden" name="id" value="${s.id}"/>
+
+                    <button class="btn btn-danger btn-sm">
+                        Xóa
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</c:forEach>
+</div>
+<!-- Khi không có dữ liệu -->
+<c:if test="${empty subjects}">
+    <div class="alert alert-info mt-3">
+        Không tìm thấy môn học nào
+    </div>
+</c:if>

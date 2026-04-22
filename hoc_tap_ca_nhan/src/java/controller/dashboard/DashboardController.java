@@ -41,6 +41,13 @@ public class DashboardController extends HttpServlet {
         req.setAttribute("upcoming", upcoming);
 
         // FORWARD
-        req.getRequestDispatcher("/views/dashboard/dashboard.jsp").forward(req, resp);
+     //   req.getRequestDispatcher("/views/dashboard/dashboard.jsp").forward(req, resp);
+        req.setAttribute("activePage", "dashboard");
+        req.setAttribute("pageTitle", "Trang chủ");
+        req.setAttribute("pageCss", "dashboard.css");
+        req.setAttribute("contentPage", "/views/dashboard/dashboard_content.jsp");
+
+        req.getRequestDispatcher("/views/common/layout.jsp")
+               .forward(req, resp);
     }
 }

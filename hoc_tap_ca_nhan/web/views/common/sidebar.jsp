@@ -1,62 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<style>
-    body {
-        margin: 0;
-        font-family: Arial;
-        background-color: #f5f5f5;
-    }
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/sidebar.css">
 
-    .sidebar {
-        width: 220px;
-        height: 100vh;
-        background-color: #e6e6e6;
-        border-right: 2px solid #999;
-        float: left;
-        padding-top: 10px;
-    }
+<div class="sidebar bg-dark text-white">
 
-    .menu-item {
-        display: block;
-        margin: 8px 10px;
-        padding: 12px;
-        background-color: #d9d9d9;
-        border: 2px solid #888;
-        border-radius: 6px;
-        text-align: center;
-        text-decoration: none;
-        color: black;
-        font-weight: 500;
-    }
+    <h4 class="p-3 border-bottom">📚 Study App</h4>
 
-    .menu-item:hover {
-        background-color: #cccccc;
-    }
+    <a class="nav-link ${activePage == 'home' ? 'active' : ''}" href="dashboard">🏠 Trang chủ</a>
+    <a class="nav-link ${activePage == 'profile' ? 'active' : ''}" href="user">👤 Cá nhân</a>
+    <a class="nav-link ${activePage == 'subjects' ? 'active' : ''}" href="subjects">📖 Môn học</a>
+    <a class="nav-link ${activePage == 'password' ? 'active' : ''}" href="changePassword">🔒 Đổi mật khẩu</a>
+    <a class="nav-link text-danger" href="logout">🚪 Đăng xuất</a>
 
-    .active {
-        background-color: #f4b6b6; /* đỏ nhạt giống hình */
-        border: 2px solid #ff4d4d;
-    }
-</style>
-
-<div class="sidebar">
-    <a class="menu-item ${activePage == 'home' ? 'active' : ''}" href="dashboard">
-        Trang chủ
-    </a>
-
-    <a class="menu-item ${activePage == 'profile' ? 'active' : ''}" href="user">
-        Thông tin người dùng
-    </a>
-
-    <a class="menu-item ${activePage == 'subjects' ? 'active' : ''}" href="subjects">
-        Danh sách môn học
-    </a>
-
-    <a class="menu-item ${activePage == 'password' ? 'active' : ''}" href="changePassword">
-        Đổi mật khẩu
-    </a>
-
-    <a class="menu-item" href="logout">
-        Đăng xuất
-    </a>
 </div>

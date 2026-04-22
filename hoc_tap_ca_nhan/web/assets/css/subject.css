@@ -1,0 +1,14 @@
+.form-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.subject-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    width: 400px;
+}

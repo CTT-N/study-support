@@ -14,7 +14,13 @@ public class ChangePasswordController extends HttpServlet {
     private AuthService authService = new AuthService();
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
-        req.getRequestDispatcher("/views/auth/changePassword.jsp").forward(req, resp);
+        req.setAttribute("activePage", "password");
+        req.setAttribute("pageTitle", "Đổi mật khẩu");
+        req.setAttribute("pageCss", "form.css");
+        req.setAttribute("contentPage", "/views/auth/changePassword_content.jsp");
+
+        req.getRequestDispatcher("/views/common/layout.jsp")
+           .forward(req, resp);
     }
     
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)

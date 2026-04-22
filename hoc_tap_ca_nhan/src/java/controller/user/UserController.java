@@ -27,16 +27,27 @@ public class UserController extends HttpServlet {
 
         // vào trang edit profile
         if ("editProfile".equals(action)) {
-            req.getRequestDispatcher("/views/user/editProfile.jsp")
+            req.setAttribute("activePage", "profile");
+            req.setAttribute("pageTitle", "Sửa thông tin");
+            req.setAttribute("pageCss", "edit-profile.css");
+            req.setAttribute("contentPage", "/views/user/editProfile.jsp");
+            // forward
+            req.getRequestDispatcher("/views/common/layout.jsp")
                .forward(req, resp);
             return;
         }
 
         // mặc định: profile
         User user = (User) session.getAttribute("user");
+        //set data
         req.setAttribute("user", user);
-
-        req.getRequestDispatcher("/views/user/profile.jsp")
+        //set layout
+        req.setAttribute("activePage", "profile");
+        req.setAttribute("pageTitle", "Thông tin người dùng");
+        req.setAttribute("pageCss", "profile.css");
+        req.setAttribute("contentPage", "/views/user/profile.jsp");
+        // forward
+        req.getRequestDispatcher("/views/common/layout.jsp")
            .forward(req, resp);
     }
 
@@ -53,7 +64,6 @@ public class UserController extends HttpServlet {
 
         String action = req.getParameter("action");
 
-        // xử lý update profile
         if ("editProfile".equals(action)) {
 
             User user = (User) session.getAttribute("user");
@@ -69,15 +79,21 @@ public class UserController extends HttpServlet {
             if ("SUCCESS".equals(result)) {
 
                 session.setAttribute("user", user);
-                session.setAttribute("success", "Cập nhật thành công!");
 
-                resp.sendRedirect(req.getContextPath() + "/user");
+                // redirect + message qua param
+                resp.sendRedirect(req.getContextPath() + "/user?msg=updated");
                 return;
 
             } else {
+                // forward lại layout (KHÔNG forward jsp trực tiếp)
                 req.setAttribute("error", result);
 
-                req.getRequestDispatcher("/views/user/editProfile.jsp")
+                req.setAttribute("activePage", "profile");
+                req.setAttribute("pageTitle", "Sửa thông tin");
+                req.setAttribute("pageCss", "edit-profile.css");
+                req.setAttribute("contentPage", "/views/user/editProfile.jsp");
+
+                req.getRequestDispatcher("/views/common/layout.jsp")
                    .forward(req, resp);
             }
         }

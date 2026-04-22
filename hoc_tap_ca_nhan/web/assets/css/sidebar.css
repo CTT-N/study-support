@@ -1,0 +1,22 @@
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+}
+
+.sidebar .nav-link {
+    display: block;
+    padding: 12px 20px;
+    color: #ccc;
+    text-decoration: none;
+}
+
+.sidebar .nav-link:hover {
+    background: #343a40;
+    color: white;
+}
+
+.sidebar .active {
+    background: #0d6efd;
+    color: white;
+}
