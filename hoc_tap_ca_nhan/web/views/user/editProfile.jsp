@@ -4,8 +4,6 @@
 
     <div class="form-box">
 
-        <h2>Sửa thông tin</h2>
-
         <form action="${pageContext.request.contextPath}/user" method="post">
             <input type="hidden" name="action" value="editProfile">
 

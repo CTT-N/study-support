@@ -26,21 +26,62 @@
 .section {
     background: white;
     border-radius: 12px;
-    padding: 20px;
-    width: 420px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 0; /* Đổi padding về 0 để header và list liền mạch */
+    width: 100%; /* Cho phép rộng theo container thay vì cố định 420px */
+    max-width: 600px; /* Giới hạn độ rộng vừa phải */
+    overflow: hidden;
 }
 
-.section ul {
+.section-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.task-list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.section li {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+.task-item {
+    display: flex;
+    justify-content: space-between; /* Đẩy tên sang trái, ngày sang phải */
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f8f8f8;
+    transition: background 0.2s;
 }
 
-.section li:last-child {
-    border-bottom: none;
+.task-item:hover {
+    background: #fdfdfd;
+}
+
+.subject-badge {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #2563eb;
+    background: #eff6ff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.task-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.date-text {
+    font-size: 13px;
+    color: #ef4444; /* Màu đỏ cho ngày sắp đến hạn */
+    font-weight: 500;
+}
+
+.btn-link {
+    font-size: 13px;
+    text-decoration: none;
+    color: #2563eb;
 }

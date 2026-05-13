@@ -4,8 +4,6 @@
 
     <div class="card p-4 shadow-soft" style="width:400px">
 
-        <h4 class="mb-3">Thông tin người dùng</h4>
-
         <p><b>Họ tên:</b> ${user.fullName}</p>
         <p><b>Email:</b> ${user.email}</p>
 
