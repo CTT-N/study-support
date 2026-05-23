@@ -10,150 +10,171 @@
     Subject subject = (Subject) request.getAttribute("subject");
 %>
 
-<a href="subjects">
-    <button style="margin-bottom:15px;">⬅ Quay lại danh sách môn học</button>
-</a>
+<div class="mb-3">
+    <a href="subjects" class="btn btn-link text-decoration-none text-secondary p-0 d-inline-flex align-items-center">
+        <span class="me-1">←</span> Quay lại danh sách môn học
+    </a>
+</div>
     
-    <div class="card">
-        <h3>
-            📋 Danh sách nhiệm vụ 
+<div class="card border-0 shadow-sm rounded-3">
+    <div class="card-body p-4">
+        
+        <h4 class="card-title d-flex align-items-center mb-4 fw-bold text-dark">
+            <span class="me-2">📋</span> Danh sách nhiệm vụ 
             <% if (subject != null) { %>
-                <span style="color:#888;">|</span>
-                <span style="color:#4CAF50;"><%= subject.getSubjectName() %></span>
+                <span class="mx-2 text-muted fw-light">|</span>
+                <span class="text-success"><%= subject.getSubjectName() %></span>
             <% } %>
-        </h3>
+        </h4>
 
         <% if (request.getAttribute("error") != null) { %>
-            <p style="color:red;"><%= request.getAttribute("error") %></p>
+            <div class="alert alert-danger py-2 px-3 mb-3 fs-6" role="alert">
+                ⚠️ <%= request.getAttribute("error") %>
+            </div>
         <% } %>
-        <form method="post" action="assignments" class="top-bar">
+
+        <form method="post" action="assignments" class="row g-2 align-items-center mb-4 p-3 bg-light rounded-3">
             <input type="hidden" name="action" value="create"/>
             <input type="hidden" name="subjectId" value="<%=subjectId%>"/>
 
-            <select name="type">
-                <option value="ASSIGNMENT" selected>📚 Task</option>
-                <option value="EXAM">📝 Exam</option>
-            </select>
+            <div class="col-md-2">
+                <select name="type" class="form-select form-select-sm border-secondary-subtle">
+                    <option value="TASK" selected>📚 Task</option>
+                    <option value="EXAM">📝 Exam</option>
+                </select>
+            </div>
 
-            <input type="text" name="title" placeholder="Nhập tên" required/>
+            <div class="col-md-3">
+                <input type="text" name="title" class="form-control form-control-sm border-secondary-subtle" placeholder="Nhập tên nhiệm vụ *" required/>
+            </div>
 
-            <input type="text" name="description" placeholder="Mô tả (không bắt buộc)"/>
+            <div class="col-md-4">
+                <input type="text" name="description" class="form-control form-control-sm border-secondary-subtle" placeholder="Mô tả (không bắt buộc)"/>
+            </div>
 
-            <input type="date" name="dueDate"/>
+            <div class="col-md-2">
+                <input type="date" name="dueDate" class="form-control form-control-sm border-secondary-subtle" required/>
+            </div>
 
-            <button type="submit">Thêm</button>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary btn-sm w-100 fw-semibold">Thêm</button>
+            </div>
         </form>
 
-        <!-- TABLE -->
-        <table class="table table-hover align-middle">
-            <tr>
-                <th>Loại</th>
-                <th>Tên</th>
-                <th>Ngày tạo</th>
-                <th>Hạn</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-
-<%
-    if (list != null) {
-        for (Assignment a : list) {
-%>
-<%
-    boolean isOverdue = false;
-    if (a.getDueDate() != null && "PENDING".equalsIgnoreCase(a.getStatus())) {
-        isOverdue = a.getDueDate().isBefore(java.time.LocalDateTime.now());
-    }
-    String displayStatus = isOverdue ? "overdue" : a.getStatus();
-%>
-
-    <tr class="<%= "EXAM".equalsIgnoreCase(a.getType()) ? "exam-row" : "" %>">
-
-        <!-- LOẠI -->
-        <td>
-            <%
-                String type = (a.getType() != null) ? a.getType() : "ASSIGNMENT";
-            %>
-
-            <span class="type-badge <%= type.toLowerCase() %>">
-                <%= "EXAM".equalsIgnoreCase(type) ? "📝 Exam" : "📚 Task" %>
-            </span>
-        </td>
-
-        <!-- TÊN -->
-        <td style="text-align:left;">
-            <strong><%= a.getTitle() %></strong>
-            <% if (a.getDescription() != null && !a.getDescription().isEmpty()) { %>
-                <div style="font-size:12px; color:#777;">
-                    <%= a.getDescription() %>
-                </div>
-            <% } %>
-        </td>
-
-        <!-- NGÀY TẠO -->
-        <td>
-            <%= a.getCreatedAt() != null ? a.getCreatedAt().format(fmt) : "" %>
-        </td>
-
-        <!-- HẠN -->
-        <td>
-            <%= a.getDueDate() != null ? a.getDueDate().format(fmt) : "" %>
-        </td>
-
-        <!-- TRẠNG THÁI -->
-        <td>
-            <span class="badge <%= displayStatus.toLowerCase() %>">
-                <%= 
-                    "done".equalsIgnoreCase(displayStatus) ? "Hoàn thành" :
-                    "overdue".equalsIgnoreCase(displayStatus) ? "Quá hạn" :
-                    "Đang tiến hành"
-                %>
-            </span>
-
-            <br/>
-
-            <form method="post" action="assignments">
-                <input type="hidden" name="action" value="updateStatus"/>
-                <input type="hidden" name="id" value="<%= a.getId() %>"/>
-                <input type="hidden" name="subjectId" value="<%=subjectId%>"/>
-
-                <select name="status" onchange="this.form.submit()">
-                    <option value="PENDING" <%= "PENDING".equalsIgnoreCase(a.getStatus()) ? "selected" : "" %>>
-                        Đang tiến hành
-                    </option>
-                    <option value="DONE" <%= "DONE".equalsIgnoreCase(a.getStatus()) ? "selected" : "" %>>
-                        Hoàn thành
-                    </option>
-                </select>
-            </form>
-        </td>
-
-        <!-- HÀNH ĐỘNG -->
-        <td>
-            <div style="display:flex; gap:5px; justify-content:center;">
-                <form method="post" action="assignments">
-                    <input type="hidden" name="action" value="delete"/>
-                    <input type="hidden" name="id" value="<%= a.getId() %>"/>
-                    <input type="hidden" name="subjectId" value="<%=subjectId%>"/>
-
-                    <button class="delete-btn" onclick="return confirm('Xác nhận xóa?')">
-                        Xóa
-                    </button>
-                </form>
-
-                <a href="assignments?action=edit&id=<%=a.getId()%>&subjectId=<%=subjectId%>">
-                    <button type="button">Sửa</button>
-                </a>
+        <% if (list == null || list.isEmpty()) { %>
+            <div class="text-center py-5 text-muted">
+                <p class="mb-0 fs-5">Chưa có nhiệm vụ nào được tạo cho môn học này.</p>
             </div>
-        </td>
+        <% } else { %>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-secondary">
+                        <tr>
+                            <th scope="col" style="width: 12%">Loại</th>
+                            <th scope="col" style="width: 38%">Tên & Mô tả</th>
+                            <th scope="col" style="width: 13%">Ngày tạo</th>
+                            <th scope="col" style="width: 13%">Hạn chót</th>
+                            <th scope="col" style="width: 14%">Trạng thái</th>
+                            <th scope="col" style="width: 10%" class="text-center">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                        for (Assignment a : list) {
+                            boolean isOverdue = false;
+                            java.time.LocalDate today = java.time.LocalDate.now();
+                            
+                            if (a.getDueDate() != null && "PENDING".equalsIgnoreCase(a.getStatus())) {
+                                java.time.LocalDate due = a.getDueDate().toLocalDate(); 
+                                // Nếu ngày hạn TRƯỚC hoặc BẰNG ngày hôm nay thì tính là đến hạn/quá hạn để cảnh báo dữ dội
+                                isOverdue = due.isBefore(today) || due.isEqual(today);
+                            }
+                            
+                            // Thiết lập màu nền hàng nếu là Exam để phân biệt trực quan
+                            String rowClass = "EXAM".equalsIgnoreCase(a.getType()) ? "table-warning-subtle" : "";
+                    %>
+                        <tr class="<%= rowClass %>">
+                            <td>
+                                <% String type = (a.getType() != null) ? a.getType() : "TASK"; %>
+                                <% if ("EXAM".equalsIgnoreCase(type)) { %>
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1.5">📝 Exam</span>
+                                <% } else { %>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1.5">📚 Task</span>
+                                <% } %>
+                            </td>
 
-    </tr>
-<%
-        }
-    }
-%>
-<% if (list == null || list.isEmpty()) { %>
-    <p>Chưa có nhiệm vụ nào</p>
-<% } %>
-        </table>
+                            <td class="text-start">
+                                <div class="fw-semibold text-dark"><%= a.getTitle() %></div>
+                                <% if (a.getDescription() != null && !a.getDescription().isEmpty()) { %>
+                                    <div class="text-muted small mt-1"><%= a.getDescription() %></div>
+                                <% } %>
+                            </td>
+
+                            <td class="text-secondary small">
+                                <%= a.getCreatedAt() != null ? a.getCreatedAt().format(fmt) : "" %>
+                            </td>
+
+                            <td>
+                                <% if (isOverdue) { %>
+                                    <span class="text-danger fw-bold small">⚠️ <%= a.getDueDate() != null ? a.getDueDate().format(fmt) : "" %></span>
+                                <% } else { %>
+                                    <span class="text-dark small"><%= a.getDueDate() != null ? a.getDueDate().format(fmt) : "" %></span>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <form method="post" action="assignments" class="d-inline">
+                                    <input type="hidden" name="action" value="updateStatus"/>
+                                    <input type="hidden" name="id" value="<%= a.getId() %>"/>
+                                    <input type="hidden" name="subjectId" value="<%=subjectId%>"/>
+
+                                    <% 
+                                        String selectColorClass = "";
+                                        if ("DONE".equalsIgnoreCase(a.getStatus())) {
+                                            selectColorClass = "bg-success-subtle text-success border-success-subtle fw-semibold";
+                                        } else if (isOverdue) {
+                                            // Ép buộc select box chuyển thành màu đỏ báo động khi quá hạn
+                                            selectColorClass = "bg-danger text-white border-danger fw-semibold";
+                                        } else {
+                                            selectColorClass = "bg-warning-subtle text-warning-emphasis border-warning-subtle fw-semibold";
+                                        }
+                                    %>
+                                    <select name="status" onchange="this.form.submit()" class="form-select form-select-sm <%= selectColorClass %>" style="max-width: 145px;">
+                                        <option value="PENDING" <%= "PENDING".equalsIgnoreCase(a.getStatus()) ? "selected" : "" %>>
+                                            <%= isOverdue ? "🚨 Quá hạn!" : "⏳ Tiến hành" %>
+                                        </option>
+                                        <option value="DONE" <%= "DONE".equalsIgnoreCase(a.getStatus()) ? "selected" : "" %>>
+                                            ✅ Hoàn thành
+                                        </option>
+                                    </select>
+                                </form>
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <a href="assignments?action=edit&id=<%=a.getId()%>&subjectId=<%=subjectId%>" class="btn btn-outline-secondary btn-sm py-1 px-2" title="Sửa">
+                                        Sửa
+                                    </a>
+                                    
+                                    <form method="post" action="assignments" class="d-inline">
+                                        <input type="hidden" name="action" value="delete"/>
+                                        <input type="hidden" name="id" value="<%= a.getId() %>"/>
+                                        <input type="hidden" name="subjectId" value="<%=subjectId%>"/>
+
+                                        <button class="btn btn-outline-danger btn-sm py-1 px-2" onclick="return confirm('Xác nhận xóa?')">
+                                            Xóa
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <%
+                        }
+                    %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+
     </div>
+</div>

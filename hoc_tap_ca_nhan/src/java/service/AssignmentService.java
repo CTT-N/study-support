@@ -24,7 +24,7 @@ public class AssignmentService {
 
     public boolean updateStatus(int id, String status) {
 
-        if (!status.equals("pending") && !status.equals("done") && !status.equals("overdue")) {
+        if (!status.equals("pending") && !status.equals("done")) {
             return false;
         }
 

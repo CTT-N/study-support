@@ -16,7 +16,7 @@ public class AssignmentController extends HttpServlet {
 
     private AssignmentDAO dao = new AssignmentDAO();
 
-    // LẤY DANH SÁCH
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
 
@@ -31,14 +31,12 @@ public class AssignmentController extends HttpServlet {
             req.setAttribute("contentPage", "/views/assignment/assignment-edit.jsp");
             req.getRequestDispatcher("/views/common/layout.jsp")
                 .forward(req, resp);
-            return; // rất quan trọng
+            return;
         }
 
         // mặc định: hiển thị list
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
         List<Assignment> list = dao.findBySubject(subjectId);
-        
-        // thêm đoạn này để lấy tên môn học
         SubjectDAO subjectDAO = new SubjectDAO();
         Subject subject = subjectDAO.findById(subjectId);
         
@@ -50,7 +48,7 @@ public class AssignmentController extends HttpServlet {
         req.setAttribute("pageTitle", "Nhiệm vụ");
         req.setAttribute("pageCss", "assignment.css");
         req.setAttribute("contentPage", "/views/assignment/assignment-list.jsp");
-        // forward
+        
         req.getRequestDispatcher("/views/common/layout.jsp")
             .forward(req, resp);
     }
@@ -79,7 +77,6 @@ public class AssignmentController extends HttpServlet {
             }
             a.setType(type);
 
-            // xử lý dueDate
             LocalDateTime dueDate;
             if (due != null && !due.isEmpty()) {
                 LocalDate dueLocalDate = LocalDate.parse(due);
@@ -89,14 +86,19 @@ public class AssignmentController extends HttpServlet {
                     req.setAttribute("error", "Hạn làm việc không hợp lý");
                     req.setAttribute("assignments", dao.findBySubject(subjectId));
 
-                    req.getRequestDispatcher("/views/assignment/assignment-list.jsp")
-                       .forward(req, resp);
+                    SubjectDAO subjectDAO = new SubjectDAO();
+                    req.setAttribute("subject", subjectDAO.findById(subjectId));
+                    req.setAttribute("activePage", "subjects");
+                    req.setAttribute("pageTitle", "Chỉnh sửa nhiệm vụ");
+                    req.setAttribute("contentPage", "/views/assignment/assignment-edit.jsp");
+
+                    req.getRequestDispatcher("/views/common/layout.jsp").forward(req, resp);
                     return;
                 }
                 dueDate = dueLocalDate.atStartOfDay();
             } 
             else {
-                // mặc định = thời điểm hiện tại
+                // nếu người dùng ko nhập thì mặc định là thời điểm hiện tại
                 dueDate = LocalDateTime.now();
             }
 
@@ -157,8 +159,13 @@ public class AssignmentController extends HttpServlet {
                     req.setAttribute("error", "Hạn làm việc không hợp lý");
                     req.setAttribute("assignment", old);
 
-                    req.getRequestDispatcher("/views/assignment/assignment-edit.jsp")
-                       .forward(req, resp);
+                    SubjectDAO subjectDAO = new SubjectDAO();
+                    req.setAttribute("subject", subjectDAO.findById(subjectId));
+                    req.setAttribute("activePage", "subjects");
+                    req.setAttribute("pageTitle", "Chỉnh sửa nhiệm vụ");
+                    req.setAttribute("contentPage", "/views/assignment/assignment-edit.jsp");
+
+                    req.getRequestDispatcher("/views/common/layout.jsp").forward(req, resp);
                     return;
                 }
                 dueDate = dueLocalDate.atStartOfDay();

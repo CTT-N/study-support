@@ -8,7 +8,6 @@ public class User {
     private String email;
     private String password;
     private String fullName;
-    private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     public int getId() {
@@ -40,12 +39,6 @@ public class User {
     }
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-    public String getRole() {
-        return role;
-    }
-    public void setRole(String role) {
-        this.role = role;
     }
     public LocalDateTime getCreatedAt() {
         return createdAt;

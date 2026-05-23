@@ -14,7 +14,6 @@ public class SubjectController extends HttpServlet {
 
     private SubjectDAO dao = new SubjectDAO();
 
-    // lay danh sach mon hoc
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
 
@@ -44,12 +43,12 @@ public class SubjectController extends HttpServlet {
         req.setAttribute("pageTitle", "Danh sách môn học");
         req.setAttribute("pageCss", "subject.css");
         req.setAttribute("contentPage", "/views/subject/subject-list.jsp");
-        // forward
+        
         req.getRequestDispatcher("/views/common/layout.jsp")
             .forward(req, resp);
     }
     
-    // create + delete (khi xóa 1 môn học thì tất cả các dữ liệu kèm theo như assignment,.. cũng bị xóa theo)
+    // create + delete
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
         throws IOException {
 
@@ -67,7 +66,7 @@ public class SubjectController extends HttpServlet {
             dao.insert(s);
 
         } else if ("delete".equals(action)) {
-
+            // khi xóa 1 môn học thì tất cả các dữ liệu kèm theo như assignment,.. cũng bị xóa theo
             int id = Integer.parseInt(req.getParameter("id"));
             dao.delete(id);
         }

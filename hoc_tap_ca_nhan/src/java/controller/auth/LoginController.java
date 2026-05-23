@@ -10,6 +10,7 @@ import java.io.IOException;
 public class LoginController extends HttpServlet {
     private AuthService authService = new AuthService();
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 

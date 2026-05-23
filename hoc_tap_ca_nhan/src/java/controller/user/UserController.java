@@ -17,7 +17,6 @@ public class UserController extends HttpServlet {
 
         HttpSession session = req.getSession(false);
 
-        // check login
         if (session == null || session.getAttribute("user") == null) {
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
             return;
@@ -25,13 +24,12 @@ public class UserController extends HttpServlet {
 
         String action = req.getParameter("action");
 
-        // vào trang edit profile
         if ("editProfile".equals(action)) {
             req.setAttribute("activePage", "profile");
             req.setAttribute("pageTitle", "Sửa thông tin");
-            req.setAttribute("pageCss", "edit-profile.css");
+        //    req.setAttribute("pageCss", "editProfile.css");
             req.setAttribute("contentPage", "/views/user/editProfile.jsp");
-            // forward
+            
             req.getRequestDispatcher("/views/common/layout.jsp")
                .forward(req, resp);
             return;
@@ -44,9 +42,9 @@ public class UserController extends HttpServlet {
         //set layout
         req.setAttribute("activePage", "profile");
         req.setAttribute("pageTitle", "Thông tin người dùng");
-        req.setAttribute("pageCss", "profile.css");
+    //    req.setAttribute("pageCss", "profile.css");
         req.setAttribute("contentPage", "/views/user/profile.jsp");
-        // forward
+        
         req.getRequestDispatcher("/views/common/layout.jsp")
            .forward(req, resp);
     }
@@ -90,7 +88,7 @@ public class UserController extends HttpServlet {
 
                 req.setAttribute("activePage", "profile");
                 req.setAttribute("pageTitle", "Sửa thông tin");
-                req.setAttribute("pageCss", "edit-profile.css");
+        //        req.setAttribute("pageCss", "edit-profile.css");
                 req.setAttribute("contentPage", "/views/user/editProfile.jsp");
 
                 req.getRequestDispatcher("/views/common/layout.jsp")

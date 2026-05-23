@@ -11,10 +11,17 @@ public class SubjectDAO {
 
     public List<Subject> findByUser(int userId) {
         List<Subject> list = new ArrayList<>();
-
-        // tìm môn học theo mã nguoi dung
-        String sql = "SELECT * FROM subjects WHERE userId = ?";
-
+        String sql = """
+            select s.*,
+              count(distinct case when a.status = 'pending' then a.id end) as totalPending,
+              count(distinct case when a.status = 'pending' and a.duedate < now() then a.id end) as totalOverdue,
+              count(distinct d.id) as totalDocuments
+            from subjects s
+            left join assignments a on s.id=a.subjectId
+            left join documents d on s.id= d.subjectId
+            where s.userId = ?
+            group by s.id
+                     """;
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -26,9 +33,11 @@ public class SubjectDAO {
                 s.setId(rs.getInt("id"));
                 s.setSubjectName(rs.getString("subjectName"));
                 s.setDescription(rs.getString("description"));
+                s.setTotalPending(rs.getInt("totalPending"));
+                s.setTotalOverdue(rs.getInt("totalOverdue"));
+                s.setTotalDocuments(rs.getInt("totalDocuments"));
                 list.add(s);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,7 +45,6 @@ public class SubjectDAO {
     }
 
     public boolean insert(Subject s) {
-        // thêm môn học mới
         String sql = "INSERT INTO subjects(userId, subjectName, description) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
@@ -55,9 +63,7 @@ public class SubjectDAO {
     }
 
     public boolean delete(int id) {
-        // khi xóa thư mục môn học
         String sql = "DELETE FROM subjects WHERE id = ?";
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -69,10 +75,21 @@ public class SubjectDAO {
         }
         return false;
     }
+    
     public List<Subject> findByName(int userId, String key){
         List<Subject> ds = new ArrayList<>();
-        String sql = "SELECT * FROM subjects WHERE userId = ? AND LOWER(subjectName) LIKE LOWER(?)";
-
+        String sql = """
+            select s.*,
+              count(distinct case when a.status = 'pending' then a.id end) as totalPending,
+              count(distinct case when a.status = 'pending' and a.duedate < now() then a.id end) as totalOverdue,
+              count(distinct d.id) as totalDocuments
+            from subjects s
+            left join assignments a on s.id=a.subjectId
+            left join documents d on s.id= d.subjectId
+            where s.userId = ? and lower(s.subjectname) like lower(?)
+            group by s.id
+                     """;
+        
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -86,6 +103,9 @@ public class SubjectDAO {
                 s.setId(rs.getInt("id"));
                 s.setSubjectName(rs.getString("subjectName"));
                 s.setDescription(rs.getString("description"));
+                s.setTotalPending(rs.getInt("totalPending"));
+                s.setTotalOverdue(rs.getInt("totalOverdue"));
+                s.setTotalDocuments(rs.getInt("totalDocuments"));
                 ds.add(s);
             }
         } catch(Exception e){
@@ -93,7 +113,8 @@ public class SubjectDAO {
         }
         return ds;
     }
-        public Subject findById(int id) {
+    
+    public Subject findById(int id) {
         String sql = "SELECT * FROM subjects WHERE id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -109,7 +130,6 @@ public class SubjectDAO {
                 s.setDescription(rs.getString("description"));
                 return s;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

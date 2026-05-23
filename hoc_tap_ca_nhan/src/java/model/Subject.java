@@ -9,6 +9,10 @@ public class Subject {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int totalPending;
+    private int totalOverdue;
+    private int totalDocuments;
+
     public int getId() {
         return id;
     }
@@ -45,5 +49,12 @@ public class Subject {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public int getTotalPending() { return totalPending; }
+    public void setTotalPending(int totalPending) { this.totalPending = totalPending; }
 
+    public int getTotalOverdue() { return totalOverdue; }
+    public void setTotalOverdue(int totalOverdue) { this.totalOverdue = totalOverdue; }
+    
+    public int getTotalDocuments() { return totalDocuments; }
+    public void setTotalDocuments(int totalDocuments) { this.totalDocuments = totalDocuments; }
 }

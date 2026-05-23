@@ -1,58 +1,30 @@
-/* cho trang login, register*/
-body {
-    background: linear-gradient(135deg, #36d1dc, #5b86e5);
-}
-
-.container {
-    width: 360px;
-    margin: 80px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-h2 {
-    text-align: center;
-}
-
-input {
+/* Thiết lập dải màu nền mượt mà toàn màn hình */
+html, body {
+    margin: 0;
+    padding: 0;
     width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #36d1dc, #5b86e5) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
 }
 
-input:focus {
-    outline: none;
-    border-color: #5b86e5;
-}
-
-.btn {
+/* Định hình khung wrapper chiếm trọn chiều rộng để đẩy class col-12 bung ra */
+.auth-wrapper {
     width: 100%;
-    padding: 12px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.btn:hover {
-    background: #1d4ed8;
+/* Hiệu ứng nhấc nhẹ và đổ bóng động cho nút bấm khi di chuột (Hover) */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.error {
-    color: red;
-    text-align: center;
-}
-
-.success {
-    color: green;
-    text-align: center;
-}
-
-.link {
-    text-align: center;
-    margin-top: 10px;
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3) !important;
 }

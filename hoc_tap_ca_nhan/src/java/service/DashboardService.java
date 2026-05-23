@@ -53,7 +53,9 @@ public class DashboardService {
                 SELECT COUNT(*) 
                 FROM assignments a
                 JOIN subjects s ON a.subjectId = s.id
-                WHERE s.userId = ? AND a.status = 'OVERDUE'
+                WHERE s.userId = ?
+                     AND a.status = 'PENDING'
+                     and a.dueDate < now()
                 """;
 
         try (Connection conn = DBConnection.getConnection();

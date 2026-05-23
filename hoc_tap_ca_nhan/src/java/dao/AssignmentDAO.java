@@ -12,6 +12,7 @@ public class AssignmentDAO {
     public List<Assignment> findBySubject(int subjectId) {
         List<Assignment> list = new ArrayList<>();
 
+        // Sắp xếp theo deadline tăng dần để ưu tiên nhiệm vụ sắp đến hạn
         String sql = "SELECT * FROM assignments WHERE subjectId = ? ORDER BY dueDate ASC";
 
         try (Connection conn = DBConnection.getConnection();
@@ -26,8 +27,8 @@ public class AssignmentDAO {
                 a.setId(rs.getInt("id"));
                 a.setSubjectId(rs.getInt("subjectId"));
                 a.setTitle(rs.getString("title"));
-                a.setDescription(rs.getString("description")); // hiển thị thêm
-                a.setType(rs.getString("type")); // thêm
+                a.setDescription(rs.getString("description"));
+                a.setType(rs.getString("type"));
                 a.setStatus(rs.getString("status"));
 
                 Timestamp createdTs = rs.getTimestamp("createdAt");
@@ -54,9 +55,10 @@ public class AssignmentDAO {
 
             ps.setInt(1, a.getSubjectId());
             ps.setString(2, a.getTitle());
-            ps.setString(3, a.getDescription());// ghi ca mo tả
+            ps.setString(3, a.getDescription());
             ps.setString(4, a.getType());
 
+            // dueDate cho phép null nếu assignment chưa có deadline
             if (a.getDueDate() != null) {
                 ps.setTimestamp(5, Timestamp.valueOf(a.getDueDate()));
             } else {
@@ -85,7 +87,6 @@ public class AssignmentDAO {
         return false;
     }
 
-    // cap nhat trang thai
     public boolean updateStatus(int id, String status) {
         String sql = "UPDATE assignments SET status = ? WHERE id = ?";
 
@@ -103,7 +104,6 @@ public class AssignmentDAO {
         return false;
     }
     
-    // thay doi thong tin ve nhiem vu
     public boolean update(Assignment a) {
         String sql = "UPDATE assignments SET title=?, description=?, type=?, dueDate=? WHERE id=?";
 

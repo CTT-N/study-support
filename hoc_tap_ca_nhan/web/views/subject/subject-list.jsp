@@ -22,7 +22,6 @@
             </div>
         </form>
 
-        <!-- ===== FORM SEARCH ===== -->
         <form method="get" action="subjects" class="col-md-5 row g-2">
             <input type="hidden" name="action" value="search"/>
 
@@ -46,38 +45,47 @@
 <div class="row g-3">
 <c:forEach var="s" items="${subjects}">
     <div class="col-md-4">
-        <div class="card shadow-soft p-3">
+        <div class="card shadow-soft p-3 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0 text-capitalize fw-bold">${s.subjectName}</h5>
+                    
+                    <c:if test="${s.totalOverdue > 0}">
+                        <span class="badge bg-danger rounded-pill" title="Có nhiệm vụ quá hạn!">
+                            <i class="bi bi-exclamation-triangle-fill"></i> ${s.totalOverdue}
+                        </span>
+                    </c:if>
+                </div>
 
-            <h5>${s.subjectName}</h5>
-            <p class="text-muted">${s.description}</p>
+                <p class="text-muted small">${s.description}</p>
+            </div>
 
-            <div class="d-flex justify-content-between">
-
-                <a class="btn btn-outline-primary btn-sm"
+            <div class="d-flex justify-content-between align-items-center mt-3">              
+                <a class="btn btn-outline-primary btn-sm d-inline-flex align-items-center"
                    href="assignments?subjectId=${s.id}">
-                    Assignment
+                    Assignment 
+                    <span class="badge bg-primary ms-1">${s.totalPending}</span>
                 </a>
 
-                <a class="btn btn-outline-success btn-sm"
+                <a class="btn btn-outline-success btn-sm d-inline-flex align-items-center"
                    href="documents?subjectId=${s.id}">
-                    Tài liệu
+                    Tài liệu 
+                    <span class="badge bg-success ms-1">${s.totalDocuments}</span>
                 </a>
 
-                <form method="post" action="subjects">
+                <form method="post" action="subjects" class="d-inline">
                     <input type="hidden" name="action" value="delete"/>
                     <input type="hidden" name="id" value="${s.id}"/>
-
-                    <button class="btn btn-danger btn-sm">
+                    <button class="btn btn-outline-danger btn-sm">
                         Xóa
                     </button>
                 </form>
-
             </div>
         </div>
     </div>
 </c:forEach>
 </div>
-<!-- Khi không có dữ liệu -->
+
 <c:if test="${empty subjects}">
     <div class="alert alert-info mt-3">
         Không tìm thấy môn học nào

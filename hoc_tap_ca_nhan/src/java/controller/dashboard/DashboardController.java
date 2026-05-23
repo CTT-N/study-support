@@ -17,7 +17,6 @@ public class DashboardController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        //Check login
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
             resp.sendRedirect("login");
@@ -26,7 +25,7 @@ public class DashboardController extends HttpServlet {
         User user = (User) session.getAttribute("user");
         int userId = user.getId();
 
-        //Thống kê
+        // Số liệu thống kê
         int totalSubjects = service.countSubjects(userId);
         int pendingAssignments = service.countPendingAssignments(userId);
         int overdueAssignments = service.countOverdueAssignments(userId);
@@ -40,12 +39,10 @@ public class DashboardController extends HttpServlet {
         req.setAttribute("overdueAssignments", overdueAssignments);
         req.setAttribute("upcoming", upcoming);
 
-        // FORWARD
-     //   req.getRequestDispatcher("/views/dashboard/dashboard.jsp").forward(req, resp);
         req.setAttribute("activePage", "dashboard");
         req.setAttribute("pageTitle", "Trang chủ");
         req.setAttribute("pageCss", "dashboard.css");
-        req.setAttribute("contentPage", "/views/dashboard/dashboard_content.jsp");
+        req.setAttribute("contentPage", "/views/dashboard/dashboard.jsp");
 
         req.getRequestDispatcher("/views/common/layout.jsp")
                .forward(req, resp);

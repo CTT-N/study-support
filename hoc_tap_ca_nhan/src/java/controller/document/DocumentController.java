@@ -26,8 +26,6 @@ public class DocumentController extends HttpServlet {
 
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
         List<Document> ds = dao.findBySubject(subjectId);
-        
-        // thêm đoạn này để lấy tên môn học
         Subject subject = subjectDAO.findById(subjectId);
         //set data
         req.setAttribute("subject", subject);
@@ -38,7 +36,7 @@ public class DocumentController extends HttpServlet {
         req.setAttribute("pageTitle", "Tài liệu");
         req.setAttribute("pageCss", "document.css");
         req.setAttribute("contentPage", "/views/document/document-list.jsp");
-        //forward
+        
         req.getRequestDispatcher("/views/common/layout.jsp")
             .forward(req, resp);
     }
@@ -50,7 +48,6 @@ public class DocumentController extends HttpServlet {
         String action = req.getParameter("action");
         int subjectId = Integer.parseInt(req.getParameter("subjectId"));
 
-        // ------- xóa tài liệu
         if ("delete".equals(action)) {
 
             int id = Integer.parseInt(req.getParameter("id"));
@@ -69,7 +66,7 @@ public class DocumentController extends HttpServlet {
             return;
         }
 
-        // ---------upload tai lieu
+        // upload tai lieu
         Part filePart = req.getPart("file");
 
         String fileName = Paths.get(filePart.getSubmittedFileName())
@@ -97,7 +94,7 @@ public class DocumentController extends HttpServlet {
         File dir = new File(subjectFolder);
         if (!dir.exists()) dir.mkdirs();
 
-        // ====== tránh trùng tên file ======
+        // tránh trùng tên file
         String newFileName = System.currentTimeMillis() + "_" + fileName;
 
         String filePath = subjectFolder + File.separator + newFileName;

@@ -12,44 +12,50 @@ import java.io.IOException;
 
 public class ChangePasswordController extends HttpServlet {
     private AuthService authService = new AuthService();
+    
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
         req.setAttribute("activePage", "password");
         req.setAttribute("pageTitle", "Đổi mật khẩu");
-        req.setAttribute("pageCss", "form.css");
-        req.setAttribute("contentPage", "/views/auth/changePassword_content.jsp");
+    //    req.setAttribute("pageCss", "changePassword.css");
+        req.setAttribute("contentPage", "/views/auth/changePassword.jsp");
 
         req.getRequestDispatcher("/views/common/layout.jsp")
            .forward(req, resp);
     }
     
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         HttpSession session = req.getSession(false);
-        
-        // kiem tra dang nhap?
-        if(session == null || session.getAttribute("user")==null){
-            resp.sendRedirect("index.jsp");
+
+        if (session == null || session.getAttribute("user") == null) {
+            resp.sendRedirect("login");
             return;
         }
-        
-        // lấy user từ session
+
         User u1 = (User) session.getAttribute("user");
-        
+
         String oldPass = req.getParameter("oldPass");
         String newPass = req.getParameter("newPass");
         String confirm = req.getParameter("confirm");
-        
-        // gọi service
+
         String result = authService.changePassword(
                 u1.getUsername(), oldPass, newPass, confirm);
-        
-        if ("SUCCESS".equals(result)){
-            req.setAttribute("success", "Đổi mật khẩu thành công!");
+
+        if ("Đổi mật khẩu thành công".equals(result)) {
+            req.setAttribute("success", result);
+
+            u1.setPassword(newPass);
+            session.setAttribute("user", u1);
         } else {
             req.setAttribute("error", result);
         }
-        
-        req.getRequestDispatcher("/views/auth/changePassword.jsp").forward(req, resp);
+
+        req.setAttribute("activePage", "password");
+        req.setAttribute("pageTitle", "Đổi mật khẩu");
+    //    req.setAttribute("pageCss", "changePassword.css");
+        req.setAttribute("contentPage", "/views/auth/changePassword.jsp");
+
+        req.getRequestDispatcher("/views/common/layout.jsp").forward(req, resp);
     }
 }

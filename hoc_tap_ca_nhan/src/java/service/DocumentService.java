@@ -9,7 +9,6 @@ public class DocumentService {
 
     public boolean uploadDocument(Document d) {
 
-        // validate cơ bản
         if (d.getDocumentName() == null || d.getDocumentName().isEmpty()) {
             return false;
         }
