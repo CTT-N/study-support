@@ -34,9 +34,10 @@
                 <hr class="border-white opacity-25 my-4">
 
                 <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 px-4">
-                    <a href="login" class="btn btn-outline-light btn-lg px-4 py-2.5 fw-semibold hover-lift d-flex align-items-center justify-content-center gap-2">
+                    <a href="login" class="btn btn-login-custom btn-lg px-4 py-2.5 fw-semibold hover-lift d-flex align-items-center justify-content-center gap-2">
                         <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
                     </a>
+
                     <a href="register" class="btn btn-primary btn-lg px-4 py-2.5 fw-bold hover-lift d-flex align-items-center justify-content-center gap-2">
                         <i class="bi bi-person-plus-fill"></i> Đăng ký tài khoản
                     </a>

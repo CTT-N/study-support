@@ -72,15 +72,15 @@ public class DocumentController extends HttpServlet {
         String fileName = Paths.get(filePart.getSubmittedFileName())
                                .getFileName().toString();
 
-        // validate file (kieemr tra file upload là loại gì, cho phép pdf, docx, ảnh
+        // validate file (chỉ cho phép pdf và ảnh)
         String type = filePart.getContentType();
 
-        boolean isValid =
-                type.startsWith("image") ||
-                type.equals("application/pdf") ||
-                type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        // Kiểm tra xem type có bắt đầu bằng "image/" (để bao gồm mọi loại ảnh: image/jpeg, image/png...) 
+        // hoặc bằng "application/pdf"
+        boolean isValid = type != null && (type.startsWith("image/") || type.equals("application/pdf"));
 
         if (!isValid) {
+            // Thông báo lỗi nếu file không hợp lệ
             resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=invalid");
             return;
         }
@@ -110,12 +110,19 @@ public class DocumentController extends HttpServlet {
         d.setFileType(type);
         d.setFileSize(filePart.getSize());
 
-        boolean success = dao.insert(d);
-
-        if (success) {
-            resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=success");
-        } else {
-            resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=error");
+        try {
+            boolean success = dao.insert(d);
+            if (success) {
+                resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=success");
+            } else {
+                // Ghi log lỗi ra cửa sổ Output của NetBeans
+                System.out.println("Insert thất bại: DAO trả về false");
+                resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=error");
+            }
+        } catch (Exception e) {
+            // In lỗi chi tiết ra console
+            e.printStackTrace(); 
+            resp.sendRedirect("documents?subjectId=" + subjectId + "&msg=error&detail=" + e.getMessage());
         }
     }
 }
