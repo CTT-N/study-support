@@ -98,7 +98,6 @@ public class DocumentController extends HttpServlet {
         String newFileName = System.currentTimeMillis() + "_" + fileName;
 
         String filePath = subjectFolder + File.separator + newFileName;
-
         // lưu file
         filePart.write(filePath);
 

@@ -1,13 +1,15 @@
-package service;
+package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import model.Assignment;
 import util.DBConnection;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-public class DashboardService {
+public class DashboardDAO {
 
     public int countSubjects(int userId) {
         String sql = "SELECT COUNT(*) FROM subjects WHERE userId = ?";

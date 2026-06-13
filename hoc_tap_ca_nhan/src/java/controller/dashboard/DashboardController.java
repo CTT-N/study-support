@@ -4,14 +4,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import model.User;
 import model.Assignment;
-import service.DashboardService;
+import dao.DashboardDAO;
 
 import java.io.IOException;
 import java.util.List;
 
 public class DashboardController extends HttpServlet {
 
-    private DashboardService service = new DashboardService();
+    private DashboardDAO dao = new DashboardDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -26,12 +26,12 @@ public class DashboardController extends HttpServlet {
         int userId = user.getId();
 
         // Số liệu thống kê
-        int totalSubjects = service.countSubjects(userId);
-        int pendingAssignments = service.countPendingAssignments(userId);
-        int overdueAssignments = service.countOverdueAssignments(userId);
+        int totalSubjects = dao.countSubjects(userId);
+        int pendingAssignments = dao.countPendingAssignments(userId);
+        int overdueAssignments = dao.countOverdueAssignments(userId);
 
         //Assignment sắp đến hạn
-        List<Assignment> upcoming = service.getUpcomingAssignments(userId);
+        List<Assignment> upcoming = dao.getUpcomingAssignments(userId);
 
         // SET DATA
         req.setAttribute("totalSubjects", totalSubjects);
